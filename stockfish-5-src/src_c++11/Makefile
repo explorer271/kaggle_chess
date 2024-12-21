@@ -40,7 +40,7 @@ PGOBENCH = ./$(EXE) bench 32 1 1 default time
 ### Object files
 OBJS = bitbase.o bitboard.o evaluate.o main.o \
 	material.o misc.o movegen.o movepick.o notation.o pawns.o position.o \
-	search.o thread.o timeman.o tt.o uci.o ucioption.o
+	search.o timeman.o tt.o uci.o ucioption.o
 
 ### ==========================================================================
 ### Section 2. High-level Configuration
