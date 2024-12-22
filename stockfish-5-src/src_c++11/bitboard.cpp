@@ -55,8 +55,8 @@ int SquareDistance[SQUARE_NB][SQUARE_NB];
 namespace {
 
   // De Bruijn sequences. See chessprogramming.wikispaces.com/BitScan
-  constexpr uint64_t DeBruijn_64 = 0x3F79D71B4CB0A89ULL;
-  constexpr uint32_t DeBruijn_32 = 0x783A9B23;
+  const uint64_t DeBruijn_64 = 0x3F79D71B4CB0A89ULL;
+  const uint32_t DeBruijn_32 = 0x783A9B23;
 
   CACHE_LINE_ALIGNMENT
 
@@ -127,7 +127,7 @@ Square msb(Bitboard b) {
 /// Bitboards::pretty() returns an ASCII representation of a bitboard to be
 /// printed to standard output. This is sometimes useful for debugging.
 
-constexpr std::string Bitboards::pretty(Bitboard b) {
+const std::string Bitboards::pretty(Bitboard b) {
 
   std::string s = "+---+---+---+---+---+---+---+---+\n";
 
