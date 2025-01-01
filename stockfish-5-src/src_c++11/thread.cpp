@@ -288,7 +288,7 @@ void Thread::split(Position& pos, const Stack* ss, Value alpha, Value beta, Valu
 
   sp.masterThread = this;
   sp.parentSplitPoint = activeSplitPoint;
-  sp.slavesMask = 0    //, sp.slavesMask.set(idx);
+  sp.slavesMask = 0 ;   //, sp.slavesMask.set(idx);
   sp.depth = depth;
   sp.bestValue = *bestValue;
   sp.bestMove = *bestMove;
