@@ -33,7 +33,7 @@
 #include "notation.h"
 #include "search.h"
 #include "timeman.h"
-#include "thread.h"
+//#include "thread.h"
 #include "tt.h"
 #include "ucioption.h"
 
