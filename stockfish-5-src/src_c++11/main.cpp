@@ -32,13 +32,18 @@ int main(int argc, char* argv[]) {
   //std::cout << engine_info() << std::endl;
 
   UCI::init(Options);
+
+  Options["Threads"] = "1"; // Force single-threaded mode
+
+  
   Bitboards::init();
   Position::init();
   Bitbases::init_kpk();
   Search::init();
   Pawns::init();
   Eval::init();
-  Threads.init();
+  //Threads.init();
+  Threads.set(1);           // Explicitly set single-threaded mode
   TT.resize(Options["Hash"]);
 
   UCI::loop(argc, argv);
