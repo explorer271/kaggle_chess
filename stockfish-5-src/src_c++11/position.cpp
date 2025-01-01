@@ -1,21 +1,3 @@
-/*
-  Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2008 Tord Romstad (Glaurung author)
-  Copyright (C) 2008-2014 Marco Costalba, Joona Kiiski, Tord Romstad
-
-  Stockfish is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Stockfish is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 #include <algorithm>
 #include <cassert>
@@ -57,9 +39,6 @@ Key Position::exclusion_key() const { return st->key ^ Zobrist::exclusion;}
 
 namespace {
 
-// min_attacker() is a helper function used by see() to locate the least
-// valuable attacker for the side to move, remove the attacker we just found
-// from the bitboards and scan for new X-ray attacks behind it.
 
 template<int Pt> FORCE_INLINE
 PieceType min_attacker(const Bitboard* bb, const Square& to, const Bitboard& stmAttackers,
@@ -88,9 +67,6 @@ PieceType min_attacker<KING>(const Bitboard*, const Square&, const Bitboard&, Bi
 
 } // namespace
 
-
-/// CheckInfo c'tor
-
 CheckInfo::CheckInfo(const Position& pos) {
 
   Color them = ~pos.side_to_move();
@@ -106,13 +82,6 @@ CheckInfo::CheckInfo(const Position& pos) {
   checkSq[QUEEN]  = checkSq[BISHOP] | checkSq[ROOK];
   checkSq[KING]   = 0;
 }
-
-
-/// Position::init() initializes at startup the various arrays used to compute
-/// hash keys and the piece square tables. The latter is a two-step operation:
-/// Firstly, the white halves of the tables are copied from PSQT[] tables.
-/// Secondly, the black halves of the tables are initialized by flipping and
-/// changing the sign of the white scores.
 
 void Position::init() {
 
@@ -154,10 +123,6 @@ void Position::init() {
   }
 }
 
-
-/// Position::operator=() creates a copy of 'pos'. We want the new born Position
-/// object to not depend on any external data so we detach state pointer from
-/// the source one.
 
 Position& Position::operator=(const Position& pos) {
 
