@@ -23,7 +23,7 @@
 #include "evaluate.h"
 #include "position.h"
 #include "search.h"
-#include "thread.h"
+//#include "thread.h"
 #include "tt.h"
 #include "ucioption.h"
 
@@ -42,11 +42,11 @@ int main(int argc, char* argv[]) {
   Search::init();
   Pawns::init();
   Eval::init();
-  Threads.init();
+ // Threads.init();
   
   TT.resize(Options["Hash"]);
 
   UCI::loop(argc, argv);
 
-  Threads.exit();
+ // Threads.exit();
 }
