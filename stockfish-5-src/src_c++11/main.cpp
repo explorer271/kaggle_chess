@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
   Pawns::init();
   Eval::init();
   //Threads.init();
-  Threads.set(1);           // Explicitly set single-threaded mode
+  ThreadPool.set(1);           // Explicitly set single-threaded mode
   TT.resize(Options["Hash"]);
 
   UCI::loop(argc, argv);
