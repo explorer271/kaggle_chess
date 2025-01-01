@@ -192,8 +192,11 @@ void ThreadPool::exit() {
 
   delete_thread(timer); // As first because check_time() accesses threads data
 
-  for (Thread* th : *this)
-      delete_thread(th);
+  // for (Thread* th : *this)
+  //     delete_thread(th);
+
+  delete_thread(back());
+  
 }
 
 
@@ -285,7 +288,7 @@ void Thread::split(Position& pos, const Stack* ss, Value alpha, Value beta, Valu
 
   sp.masterThread = this;
   sp.parentSplitPoint = activeSplitPoint;
-  sp.slavesMask = 0, sp.slavesMask.set(idx);
+  sp.slavesMask = 0    //, sp.slavesMask.set(idx);
   sp.depth = depth;
   sp.bestValue = *bestValue;
   sp.bestMove = *bestMove;
@@ -312,19 +315,20 @@ void Thread::split(Position& pos, const Stack* ss, Value alpha, Value beta, Valu
   activePosition = nullptr;
 
   if (!Fake)
-      for (Thread* slave; (slave = Threads.available_slave(this)) != nullptr; )
-      {
-          sp.slavesMask.set(slave->idx);
-          slave->activeSplitPoint = &sp;
-          slave->searching = true; // Slave leaves idle_loop()
-          slave->notify_one(); // Could be sleeping
-      }
+  { sp.mutex.unlock();}
+      // for (Thread* slave; (slave = Threads.available_slave(this)) != nullptr; )
+      // {
+      //     sp.slavesMask.set(slave->idx);
+      //     slave->activeSplitPoint = &sp;
+      //     slave->searching = true; // Slave leaves idle_loop()
+      //     slave->notify_one(); // Could be sleeping
+      // }
 
   // Everything is set up. The master thread enters the idle loop, from which
   // it will instantly launch a search, because its 'searching' flag is set.
   // The thread will return from the idle loop when all slaves have finished
   // their work at this split point.
-  sp.mutex.unlock();
+  //sp.mutex.unlock();
   Threads.mutex.unlock();
 
   Thread::idle_loop(); // Force a call to base class idle_loop()
