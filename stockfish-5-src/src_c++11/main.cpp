@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 
   UCI::init(Options);
 
-  Options["Threads"] = "1"; // Force single-threaded mode
+  
 
   
   Bitboards::init();
@@ -42,8 +42,8 @@ int main(int argc, char* argv[]) {
   Search::init();
   Pawns::init();
   Eval::init();
-  //Threads.init();
-  ThreadPool.set(1);           // Explicitly set single-threaded mode
+  Threads.init();
+  
   TT.resize(Options["Hash"]);
 
   UCI::loop(argc, argv);
