@@ -203,16 +203,37 @@ void ThreadPool::exit() {
 // in advance (which include pawns and material tables), even if only a few
 // are to be used.
 
+// void ThreadPool::read_uci_options() {
+
+//   minimumSplitDepth = Options["Min Split Depth"] * ONE_PLY;
+//   size_t requested  = Options["Threads"];
+
+//   assert(requested > 0);
+
+//   // If zero (default) then set best minimum split depth automatically
+//   if (!minimumSplitDepth)
+//       minimumSplitDepth = requested < 8 ? 4 * ONE_PLY : 7 * ONE_PLY;
+
+//   while (size() < requested)
+//       push_back(new_thread<Thread>());
+
+//   while (size() > requested)
+//   {
+//       delete_thread(back());
+//       pop_back();
+//   }
+// }
 void ThreadPool::read_uci_options() {
 
   minimumSplitDepth = Options["Min Split Depth"] * ONE_PLY;
-  size_t requested  = Options["Threads"];
+
+  // Force the number of threads to 1, ignoring the "Threads" option
+  size_t requested = 1;
 
   assert(requested > 0);
 
-  // If zero (default) then set best minimum split depth automatically
-  if (!minimumSplitDepth)
-      minimumSplitDepth = requested < 8 ? 4 * ONE_PLY : 7 * ONE_PLY;
+  // Set the best minimum split depth for single-threaded mode
+  minimumSplitDepth = 4 * ONE_PLY;
 
   while (size() < requested)
       push_back(new_thread<Thread>());
@@ -223,6 +244,7 @@ void ThreadPool::read_uci_options() {
       pop_back();
   }
 }
+
 
 
 // available_slave() tries to find an idle thread which is available as a slave
