@@ -88,7 +88,7 @@ int GetTopReverseIdx(int* arr, int n) {
   return m;
 }
 
-inline void ShiftToBadCaptures(MoveList* moves, int idx) {
+void ShiftToBadCaptures(MoveList* moves, int idx) {
   // Put the bad capture starting at the end
   moves->tactical[MAX_MOVES - 1 - moves->nBadTactical] = moves->tactical[idx];
   moves->sTactical[MAX_MOVES - 1 - moves->nBadTactical] = moves->sTactical[idx];
@@ -100,7 +100,7 @@ inline void ShiftToBadCaptures(MoveList* moves, int idx) {
   moves->sTactical[idx] = moves->tactical[moves->nTactical];
 }
 
-inline Move PopGoodCapture(MoveList* moves, int idx) {
+Move PopGoodCapture(MoveList* moves, int idx) {
   Move temp = moves->tactical[idx];
 
   moves->nTactical--;
@@ -110,7 +110,7 @@ inline Move PopGoodCapture(MoveList* moves, int idx) {
   return temp;
 }
 
-inline Move PopQuiet(MoveList* moves, int idx) {
+Move PopQuiet(MoveList* moves, int idx) {
   Move temp = moves->quiet[idx];
 
   moves->nQuiets--;
@@ -120,7 +120,7 @@ inline Move PopQuiet(MoveList* moves, int idx) {
   return temp;
 }
 
-inline Move PopBadCapture(MoveList* moves) {
+Move PopBadCapture(MoveList* moves) {
   Move temp = moves->tactical[MAX_MOVES - 1];
 
   moves->nBadTactical--;
