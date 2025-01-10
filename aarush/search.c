@@ -29,11 +29,8 @@
 #include "move.h"
 #include "movegen.h"
 #include "movepick.h"
-#include "noobprobe/noobprobe.h"
-#include "pyrrhic/tbprobe.h"
 #include "search.h"
 #include "see.h"
-#include "tb.h"
 #include "thread.h"
 #include "transposition.h"
 #include "types.h"
@@ -85,17 +82,6 @@ void* UCISearch(void* arg) {
 
 void BestMove(Board* board, SearchParams* params, ThreadData* threads, SearchResults* results) {
   Move bestMove;
-  if ((bestMove = TBRootProbe(board))) {
-    while (PONDERING)
-      ;
-
-    printf("bestmove %s\n", MoveToStr(bestMove, board));
-  } else if ((bestMove = ProbeNoob(board))) {
-    while (PONDERING)
-      ;
-
-    printf("bestmove %s\n", MoveToStr(bestMove, board));
-  } else {
     pthread_t pthreads[threads->count];
     InitPool(board, params, threads, results);
 
@@ -120,7 +106,6 @@ void BestMove(Board* board, SearchParams* params, ThreadData* threads, SearchRes
       printf(" ponder %s", MoveToStr(results->ponderMoves[results->depth], board));
 
     printf("\n");
-  }
 }
 
 void* Search(void* arg) {
@@ -184,13 +169,9 @@ void* Search(void* arg) {
           } else if (score >= beta) {
             beta = min(beta + delta, CHECKMATE);
 
-            if (abs(score) < TB_WIN_BOUND)
-              searchDepth--;
-          } else {
             thread->scores[thread->multiPV] = score;
             thread->bestMoves[thread->multiPV] = pv->moves[0];
             break;
-          }
 
           // delta x 1.5
           delta += delta / 2;
@@ -323,46 +304,6 @@ int Negamax(int alpha, int beta, int depth, ThreadData* thread, PV* pv) {
     if ((tt->flags & TT_EXACT) || ((tt->flags & TT_LOWER) && ttScore >= beta) ||
         ((tt->flags & TT_UPPER) && ttScore <= alpha))
       return ttScore;
-  }
-
-  // tablebase - we do not do this at root
-  if (!isRoot) {
-    unsigned tbResult = TBProbe(board);
-
-    if (tbResult != TB_RESULT_FAILED) {
-      data->tbhits++;
-
-      int flag;
-      switch (tbResult) {
-      case TB_WIN:
-        score = TB_WIN_BOUND - data->ply;
-        flag = TT_LOWER;
-        break;
-      case TB_LOSS:
-        score = -TB_WIN_BOUND + data->ply;
-        flag = TT_UPPER;
-        break;
-      default:
-        score = 0;
-        flag = TT_EXACT;
-        break;
-      }
-
-      // if the tablebase gives us what we want, then we accept it's score and return
-      if ((flag & TT_EXACT) || ((flag & TT_LOWER) && score >= beta) || ((flag & TT_UPPER) && score <= alpha)) {
-        TTPut(board->zobrist, depth, score, flag, 0, data->ply, 0);
-        return score;
-      }
-
-      // for pv node searches we adjust our a/b search accordingly
-      if (isPV) {
-        if (flag & TT_LOWER) {
-          bestScore = score;
-          alpha = max(alpha, score);
-        } else
-          maxScore = score;
-      }
-    }
   }
 
   // IIR by Ed Schroder
@@ -740,7 +681,6 @@ inline void PrintInfo(PV* pv, int score, ThreadData* thread, int alpha, int beta
   int depth = thread->depth;
   int seldepth = Seldepth(thread);
   uint64_t nodes = NodesSearched(thread->threads);
-  uint64_t tbhits = TBHits(thread->threads);
   uint64_t time = GetTimeMS() - thread->params->start;
   uint64_t nps = 1000 * nodes / max(time, 1);
   int hashfull = TTFull();
@@ -753,8 +693,8 @@ inline void PrintInfo(PV* pv, int score, ThreadData* thread, int alpha, int beta
   char* bound = bounded >= beta ? " lowerbound " : bounded <= alpha ? " upperbound " : " ";
 
   printf("info depth %d seldepth %d multipv %d score %s %d%stime %" PRId64 " nodes %" PRId64 " nps %" PRId64
-         " tbhits %" PRId64 " hashfull %d pv ",
-         depth, seldepth, multiPV, type, printable, bound, time, nodes, nps, tbhits, hashfull);
+         " hashfull %d pv ",
+         depth, seldepth, multiPV, type, printable, bound, time, nodes, nps, hashfull);
 
   if (pv->count)
     PrintPV(pv, board);
