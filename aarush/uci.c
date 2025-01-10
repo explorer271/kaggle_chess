@@ -241,7 +241,6 @@ void UCILoop() {
       ParsePosition("position startpos\n", &board);
       TTClear();
       ResetThreadPool(threads);
-      failedQueries = 0;
     } else if (!strncmp(in, "go", 2)) {
       ParseGo(in, &searchParameters, &board, threads);
     } else if (!strncmp(in, "stop", 4)) {
