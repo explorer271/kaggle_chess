@@ -37,7 +37,7 @@ size_t TTInit(int mb) {
   if (TT.mask)
     TTFree();
 
-  uint64_t keySize = (uint64_t)log2(mb) + (uint64_t)log2(MEGABYTE / sizeof(TTBucket));
+  uint64_t keySize = (uint64_t)14;
 
 #if defined(__linux__) && !defined(__ANDROID__)
   // On Linux systems we align on 2MB boundaries and request Huge Pages
