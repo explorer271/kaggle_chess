@@ -17,7 +17,6 @@
 #include <string.h>
 
 #include "attacks.h"
-#include "bench.h"
 #include "bits.h"
 #include "board.h"
 #include "eval.h"
@@ -49,7 +48,6 @@ int main(int argc, char** argv) {
 
   // Compliance for OpenBench
   if (argc > 1 && !strncmp(argv[1], "bench", 5)) {
-    Bench();
   } else if (argc > 1 && !strncmp(argv[1], "tune", 4)) {
 #ifdef TUNE
     Tune();
