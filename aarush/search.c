@@ -720,9 +720,9 @@ int MoveSearchable(SearchParams* params, Move move) {
   if (!params->searchMoves)
     return 1;
 
-  for (int i = 0; i < params->searchable.count; i++)
+  for (int i = 0; i < params->searchable.count; i++){
     if (move == params->searchable.moves[i])
       return 1;
-
+}
   return 0;
 }
