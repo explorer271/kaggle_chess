@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
   InitPruningAndReductionTables();
   InitAttacks();
 
-  TTInit(4);
+  TTInit(2);
 
   InitKPNetwork();
 
