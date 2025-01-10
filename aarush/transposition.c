@@ -41,7 +41,7 @@ size_t TTInit(int mb) {
 
 #if defined(__linux__) && !defined(__ANDROID__)
   // On Linux systems we align on 2MB boundaries and request Huge Pages
-  TT.buckets = aligned_alloc(2 * MEGABYTE, (1ULL << keySize) * sizeof(TTBucket));
+  TT.buckets = aligned_alloc(1 * MEGABYTE, (1ULL << keySize) * sizeof(TTBucket));
   madvise(TT.buckets, (1ULL << keySize) * sizeof(TTBucket), MADV_HUGEPAGE);
 #else
   TT.buckets = calloc((1ULL << keySize), sizeof(TTBucket));
